@@ -1,14 +1,20 @@
+var css = {
+  border: "1"
+}
+
 var Timetable = React.createClass({
   getInitialState: function() {
-    return {tasks: []};
+    return {scheduledItems: []};
   },
   loadTimetable: function() {
     $.ajax({
-      url: this.props.url,
-      dataType: 'json',
+      url: this.props.url + "?callback=parseResponse",
+      type: 'GET',
+      dataType: 'JSONP',
+      jsonpCallback: 'callback',
       cache: false,
       success: function(timetable) {
-        this.setState({tasks: timetable.scheduledItems});
+        this.setState({scheduledItems: timetable.scheduledItems});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -20,24 +26,28 @@ var Timetable = React.createClass({
     setInterval(this.loadTimetable, this.props.pollInterval);
   },
   render: function() {
-    var tasks = this.state.tasks.map(function(task) {
+    var tasks = this.state.scheduledItems.map(function(scheduledItem) {
+      var taskId = (scheduledItem.typeOf == "Buffer") ? scheduledItem.firstTask.taskId.id : scheduledItem.task.taskId.id;
+      var taskName = (scheduledItem.typeOf == "Buffer") ? scheduledItem.firstTask.name + " / " + scheduledItem.secondTask.name : scheduledItem.task.name;
+
       return (
-        <row>
-          <name>{task.}</name>
-        </row>
+        <tr>
+          <td>{taskId}</td>
+          <td>{taskName}</td>
+        </tr>
       );
     });
 
     return (
-      <div className="commentList">
-        {commentNodes}
-      </div>
+      <table>
+        {tasks}
+      </table>
     );
   }
 });
 
-var ScheduledTask = React.createClass({
+//var ScheduledTask = React.createClass({
+//
+//});
 
-});
-
-ReactDOM.render(<Timetable url="localhost:9000/timetable/today" pollInterval={2000}/>, document.getElementById('timetable'))
+ReactDOM.render(<Timetable url="http://localhost:9000/timetable/today" pollInterval={2000}/>, document.getElementById('timetable'))
