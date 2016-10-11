@@ -2,9 +2,43 @@ var css = {
   border: "1"
 }
 
+function getName(scheduledItem) {
+  return (scheduledItem.typeOf == "Buffer") ? scheduledItem.firstTask.name + " / " + scheduledItem.secondTask.name : scheduledItem.task.name;
+}
+
+function getTime(dateTime) {
+  return renderHours(dateTime.hours) + ":" + renderMinutes(dateTime.minutes);
+}
+
+function getDuration(block) {
+  return getTime(block.start) + " - " + getTime(block.finish);
+}
+
+function renderHours(hours) {
+  if (hours.toString().length == 1) {
+    return "0" + hours;
+  }
+  else {
+    return hours;
+  }
+}
+
+function renderMinutes(minutes) {
+  if (minutes.toString().length == 1) {
+    return "0" + minutes;
+  }
+  else {
+    return minutes;
+  }
+}
+
+
 var Timetable = React.createClass({
   getInitialState: function() {
     return {scheduledItems: []};
+  },
+  getTaskId: function() {
+    return "Your face!";
   },
   loadTimetable: function() {
     $.ajax({
@@ -27,13 +61,13 @@ var Timetable = React.createClass({
   },
   render: function() {
     var tasks = this.state.scheduledItems.map(function(scheduledItem) {
-      var taskId = (scheduledItem.typeOf == "Buffer") ? scheduledItem.firstTask.taskId.id : scheduledItem.task.taskId.id;
-      var taskName = (scheduledItem.typeOf == "Buffer") ? scheduledItem.firstTask.name + " / " + scheduledItem.secondTask.name : scheduledItem.task.name;
+      var name = getName(scheduledItem);
+      var duration = getDuration(scheduledItem);
 
       return (
         <tr>
-          <td>{taskId}</td>
-          <td>{taskName}</td>
+          <td>{name}</td>
+          <td>{duration}</td>
         </tr>
       );
     });
