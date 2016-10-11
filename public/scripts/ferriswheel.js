@@ -1,7 +1,3 @@
-var css = {
-  border: "1"
-}
-
 function getName(scheduledItem) {
   return (scheduledItem.typeOf == "Buffer") ? scheduledItem.firstTask.name + " / " + scheduledItem.secondTask.name : scheduledItem.task.name;
 }
@@ -35,8 +31,11 @@ function renderMinutes(minutes) {
 
 var Timetable = React.createClass({
   getInitialState: function() {
-    return {scheduledItems: []};
+    return {
+      scheduledItems: []
+    };
   },
+  isActive: function(){},
   getTaskId: function() {
     return "Your face!";
   },
@@ -73,8 +72,10 @@ var Timetable = React.createClass({
     });
 
     return (
-      <table>
-        {tasks}
+      <table className="table table-bordered table-hover table-inverse">
+        <tbody>
+          {tasks}
+        </tbody>
       </table>
     );
   }
@@ -84,4 +85,4 @@ var Timetable = React.createClass({
 //
 //});
 
-ReactDOM.render(<Timetable url="http://localhost:9000/timetable/today" pollInterval={2000}/>, document.getElementById('timetable'))
+ReactDOM.render(<Timetable url="http://localhost:9000/timetable/today" pollInterval={2000}/>, document.getElementById('container'));
