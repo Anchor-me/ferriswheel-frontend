@@ -28,6 +28,35 @@ function renderMinutes(minutes) {
   }
 }
 
+function renderStatus(scheduledItem) {
+  if(scheduledItem.typeOf == "Buffer") {
+    return "";
+  }
+  else {
+    var status = scheduledItem.task.statusType;
+    var symbol;
+
+    switch(status) {
+      case "Unknown":
+        symbol = "?";
+        break;
+      case "NotReached":
+        symbol = "";
+        break;
+      case "NotStarted":
+        symbol = "✘";
+        break;
+      case "Incomplete":
+        symbol = "!";
+        break;
+      case "Complete":
+        symbol = "✔";
+    }
+
+    return symbol;
+  }
+}
+
 
 var Timetable = React.createClass({
   getInitialState: function() {
@@ -62,11 +91,13 @@ var Timetable = React.createClass({
     var tasks = this.state.scheduledItems.map(function(scheduledItem) {
       var name = getName(scheduledItem);
       var duration = getDuration(scheduledItem);
+      var status = renderStatus(scheduledItem);
 
       return (
         <tr>
           <td>{name}</td>
           <td>{duration}</td>
+          <td>{status}</td>
         </tr>
       );
     });
@@ -85,4 +116,4 @@ var Timetable = React.createClass({
 //
 //});
 
-ReactDOM.render(<Timetable url="http://localhost:9000/timetable/today" pollInterval={2000}/>, document.getElementById('container'));
+ReactDOM.render(<Timetable url="http://localhost:9000/timetable/today" pollInterval={2000}/>, document.getElementById('timetable'));
