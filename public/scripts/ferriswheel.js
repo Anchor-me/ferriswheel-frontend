@@ -38,19 +38,19 @@ function renderStatus(scheduledItem) {
 
     switch(status) {
       case "Unknown":
-        symbol = "?";
+        symbol = "btn btn-primary btn-sm glyphicon glyphicon-question-sign";
         break;
       case "NotReached":
         symbol = "";
         break;
       case "NotStarted":
-        symbol = "✘";
+        symbol = "btn btn-danger btn-sm glyphicon glyphicon-remove";
         break;
       case "Incomplete":
-        symbol = "!";
+        symbol = "btn btn-warning btn-sm glyphicon glyphicon-warning-sign";
         break;
       case "Complete":
-        symbol = "✔";
+        symbol = "btn btn-success btn-sm glyphicon glyphicon-ok";
     }
 
     return symbol;
@@ -97,7 +97,8 @@ var Timetable = React.createClass({
         <tr>
           <td>{name}</td>
           <td>{duration}</td>
-          <td>{status}</td>
+          <td className="status"><span className={status}></span>
+          </td>
         </tr>
       );
     });
